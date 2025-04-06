@@ -9,24 +9,32 @@ const Button = (props) => {
 }
 //const Display = ({ counter }) => <div>All: {counter}</div>
 
+const StatisticLine = ({ text, value }) => {
+  return (
+    <div>
+      {text}: {value}
+    </div>
+  )
+}
+
 const Statistics = ({ counter, rating }) => {
   const totalSum = rating.reduce((sum, value) => sum + value, 0)
   const average = counter > 0 ? totalSum / counter : 0
   const positive = rating.filter(value => value === 1).length
   const neutral = rating.filter(value => value === 0).length
   const bad = rating.filter(value => value === -1).length
-  console.log(positive)
   const persentage = counter > 0 ? positive / counter : 0
+
 
   if (counter > 0) {
     return (
       <div>
-        Good: {positive} <br />
-        Neutral: {neutral} <br />
-        Bad: {bad} <br />
-        All: {counter} <br />
-        Average: {average.toFixed(2)} <br />
-        Persentage {persentage.toFixed(2)}
+        <StatisticLine text="Good" value={positive} />
+        <StatisticLine text="Neutral" value={neutral} />
+        <StatisticLine text="Bad" value={bad} />
+        <StatisticLine text="All" value={counter} />
+        <StatisticLine text="Average" value={average} />
+        <StatisticLine text="Persentage" value={persentage} />
       </div>
     )
   }
@@ -35,7 +43,6 @@ const Statistics = ({ counter, rating }) => {
   )
 
 }
-
 
 
 const App = () => {
