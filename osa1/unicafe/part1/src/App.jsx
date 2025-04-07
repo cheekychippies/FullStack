@@ -11,9 +11,10 @@ const Button = (props) => {
 
 const StatisticLine = ({ text, value }) => {
   return (
-    <div>
-      {text}: {value}
-    </div>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   )
 }
 
@@ -28,14 +29,16 @@ const Statistics = ({ counter, rating }) => {
 
   if (counter > 0) {
     return (
-      <div>
-        <StatisticLine text="Good" value={positive} />
-        <StatisticLine text="Neutral" value={neutral} />
-        <StatisticLine text="Bad" value={bad} />
-        <StatisticLine text="All" value={counter} />
-        <StatisticLine text="Average" value={average} />
-        <StatisticLine text="Persentage" value={persentage} />
-      </div>
+      <table>
+        <tbody>
+          <StatisticLine text="Good" value={positive} />
+          <StatisticLine text="Neutral" value={neutral} />
+          <StatisticLine text="Bad" value={bad} />
+          <StatisticLine text="All" value={counter} />
+          <StatisticLine text="Average" value={average.toFixed(2)} />
+          <StatisticLine text="Persentage" value={`${persentage.toFixed(2)}%`} />
+        </tbody>
+      </table>
     )
   }
   return (
@@ -77,7 +80,6 @@ const App = () => {
       <Button onClick={handleBadClick} text='bad' />
       <h1>Statistics</h1>
       <Statistics counter={counter} rating={rating} />
-
     </div>
   )
 }
