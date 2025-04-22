@@ -3,6 +3,7 @@ import axios from 'axios'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
+import personService from './services/persons'
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
@@ -10,10 +11,10 @@ const App = () => {
   const [filterName, setNewFilterName] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   })
 
@@ -22,12 +23,22 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: String(persons.length + 1)
+      //id: String(persons.length + 1)
     }
     if (!persons.some(person => person.name === newName)) {
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+
+      personService
+        .create(personObject)
+        .then(retunedPerson => {
+          setPersons(persons.concat(retunedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => {
+          console.error('Error adding person:', error)
+          alert('Failed to add the person to the server.')
+        })
+
     } else {
       alert(`${newName} is already added to phonebook`)
     }
@@ -45,6 +56,20 @@ const App = () => {
 
   const handleFilterChange = (event) => {
     setNewFilterName(event.target.value)
+  }
+  const handleDelete = (id) => {
+    const personToDelete = persons.find(person => person.id === id)
+    if (window.confirm(`Delete ${personToDelete.name} ?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+        .catch(error => {
+          console.error('Error deleting person: ', error)
+          alert(`Failed to delete ${personToDelete.name} from the server.`)
+        })
+    }
   }
 
   return (
@@ -67,6 +92,7 @@ const App = () => {
       <Persons
         persons={persons}
         filterName={filterName}
+        handleDelete={handleDelete}
       />
     </div>
   )
