@@ -23,14 +23,30 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      //id: String(persons.length + 1)
     }
-    if (!persons.some(person => person.name === newName)) {
 
+    const existingPerson = persons.find(person => person.name === newName)
+    if (existingPerson) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        const updatedPerson = { ...existingPerson, number: newNumber }
+
+        personService
+          .update(existingPerson.id, updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            console.error('Error updating person:', error)
+            alert(`Failed to update ${newName}'s number on the server.`)
+          })
+      }
+    } else {
       personService
         .create(personObject)
-        .then(retunedPerson => {
-          setPersons(persons.concat(retunedPerson))
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
         })
@@ -38,25 +54,10 @@ const App = () => {
           console.error('Error adding person:', error)
           alert('Failed to add the person to the server.')
         })
-
-    } else {
-      alert(`${newName} is already added to phonebook`)
     }
-
   }
 
-  const handlePersonChange = (event) => {
-    setNewName(event.target.value)
 
-  }
-
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value)
-  }
-
-  const handleFilterChange = (event) => {
-    setNewFilterName(event.target.value)
-  }
   const handleDelete = (id) => {
     const personToDelete = persons.find(person => person.id === id)
     if (window.confirm(`Delete ${personToDelete.name} ?`)) {
@@ -71,6 +72,20 @@ const App = () => {
         })
     }
   }
+
+  const handlePersonChange = (event) => {
+    setNewName(event.target.value)
+
+  }
+
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value)
+  }
+
+  const handleFilterChange = (event) => {
+    setNewFilterName(event.target.value)
+  }
+
 
   return (
     <div>
