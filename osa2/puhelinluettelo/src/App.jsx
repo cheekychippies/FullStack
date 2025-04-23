@@ -8,12 +8,13 @@ import './index.css'
 
 
 
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setNewFilterName] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setsuccessMessage] = useState(null)
 
 
   useEffect(() => {
@@ -42,11 +43,12 @@ const App = () => {
             setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson))
             setNewName('')
             setNewNumber('')
-            setErrorMessage(
-              `Succesfully edited ${existingPerson.name}'s phonenumber`
-            )
+            setsuccessMessage({
+              text: `successfully edited ${existingPerson.name}'s phonenumber`,
+              type: 'success'
+            })
             setTimeout(() => {
-              setErrorMessage(null)
+              setsuccessMessage(null)
             }, 5000)
           })
           .catch(error => {
@@ -62,11 +64,12 @@ const App = () => {
           setNewName('')
           setNewNumber('')
           console.log(returnedPerson.name)
-          setErrorMessage(
-            `Added ${returnedPerson.name}`
-          )
+          setsuccessMessage({
+            text: `Added ${returnedPerson.name}`,
+            type: 'success'
+          })
           setTimeout(() => {
-            setErrorMessage(null)
+            setsuccessMessage(null)
           }, 5000)
         })
         .catch(error => {
@@ -84,14 +87,19 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
-          setErrorMessage(
-            `Successfully deleted ${personToDelete.name}`
-          )
+          setsuccessMessage({
+            text: `successssfully deleted ${personToDelete.name}`,
+            type: 'success'
+          })
           setTimeout(() => {
-            setErrorMessage(null)
+            setsuccessMessage(null)
           }, 5000)
         })
         .catch(error => {
+          setsuccessMessage({
+            text: `information of ${personToDelete.name} has already been removed from the server `,
+            type: 'error'
+          })
           console.error('Error deleting person: ', error)
           alert(`Failed to delete ${personToDelete.name} from the server.`)
         })
@@ -115,7 +123,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage} />
+      <Notification message={successMessage} />
       <Filter
         filterName={filterName}
         handleFilterChange={handleFilterChange}
