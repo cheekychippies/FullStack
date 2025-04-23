@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 import personService from './services/persons'
+import './index.css'
+
+
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setNewFilterName] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+
 
   useEffect(() => {
     personService
@@ -36,6 +42,12 @@ const App = () => {
             setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson))
             setNewName('')
             setNewNumber('')
+            setErrorMessage(
+              `Succesfully edited ${existingPerson.name}'s phonenumber`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
           })
           .catch(error => {
             console.error('Error updating person:', error)
@@ -49,6 +61,13 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          console.log(returnedPerson.name)
+          setErrorMessage(
+            `Added ${returnedPerson.name}`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
         .catch(error => {
           console.error('Error adding person:', error)
@@ -65,6 +84,12 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
+          setErrorMessage(
+            `Successfully deleted ${personToDelete.name}`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
         .catch(error => {
           console.error('Error deleting person: ', error)
@@ -90,6 +115,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
       <Filter
         filterName={filterName}
         handleFilterChange={handleFilterChange}
