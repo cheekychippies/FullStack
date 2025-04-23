@@ -100,8 +100,11 @@ const App = () => {
             text: `information of ${personToDelete.name} has already been removed from the server `,
             type: 'error'
           })
-          console.error('Error deleting person: ', error)
-          alert(`Failed to delete ${personToDelete.name} from the server.`)
+          setTimeout(() => {
+            setsuccessMessage(null)
+          }, 5000)
+        /*  console.error('Error deleting person: ', error)
+          alert(`Failed to delete ${personToDelete.name} from the server.`)*/
         })
     }
   }
