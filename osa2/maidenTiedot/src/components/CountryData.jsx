@@ -1,5 +1,5 @@
 
-const CountryData = ({ country }) => {
+const CountryData = ({ country, weather }) => {
 
     if (!country) {
         return null
@@ -16,7 +16,17 @@ const CountryData = ({ country }) => {
                 ))}
             </ul>
             <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="150"></img>
+            {weather && (
+                <div>
+                    <h1>Weather in {country.capital}</h1>
+                    <p>Temperature {weather.main.temp} °C</p>
+                    <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="Weather icon" width="100" ></img>
+                    <p>Wind speed: {weather.wind.speed} m/s</p>
+                </div>
+            )} 
+
         </div>
+
     )
 }
 export default CountryData
