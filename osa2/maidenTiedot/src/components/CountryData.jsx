@@ -23,7 +23,7 @@ const CountryData = ({ country, weather }) => {
                     <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="Weather icon" width="100" ></img>
                     <p>Wind speed: {weather.wind.speed} m/s</p>
                 </div>
-            )} 
+            )}
 
         </div>
 

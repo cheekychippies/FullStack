@@ -23,7 +23,7 @@ const App = () => {
       .then(initialPersons => {
         setPersons(initialPersons)
       })
-  })
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -103,8 +103,8 @@ const App = () => {
           setTimeout(() => {
             setsuccessMessage(null)
           }, 5000)
-        /*  console.error('Error deleting person: ', error)
-          alert(`Failed to delete ${personToDelete.name} from the server.`)*/
+          /*  console.error('Error deleting person: ', error)
+            alert(`Failed to delete ${personToDelete.name} from the server.`)*/
         })
     }
   }
